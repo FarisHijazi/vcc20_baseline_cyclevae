@@ -307,7 +307,10 @@ def main():
             fs, x = read_wav(wav_name, cutoff=args.highpass_cutoff)
             n_sample += x.shape[0]
             logging.info(wav_name+" "+str(x.shape[0])+" "+str(n_sample)+" "+str(count))
-
+            if len(x.shape) == 2:  # add support for stereo
+                x = x.mean(-1)
+            assert len(x.shape) == 1, f'shape {x.shape} is invalid'
+            
             # check sampling frequency
             if not fs == args.fs:
                 logging.info("ERROR: sampling frequency is not matched.")
